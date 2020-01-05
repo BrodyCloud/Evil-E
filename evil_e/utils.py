@@ -36,3 +36,11 @@ def clear():
 		subprocess.call("clear")
 	else:
 		print("\n" * 120)
+
+
+# TODO Maybe move to displays
+def player_death(attacker, player):
+	clear()
+	print("Death Message ;(")
+	print(f"{attacker.name} Killed Player {player.name}")
+	exit()
