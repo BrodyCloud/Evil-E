@@ -1,0 +1,38 @@
+		for test in range(0, len(self.map_data) - 1):
+			coordinate = self.map_data[test]
+			total_walls = 0
+			if (coordinate['x'] == (self.map_width - 1)) and (coordinate['y'] == (self.map_height - 1)):
+				positions_surrounding = [
+					self.map_data[coordinate_to_series((coordinate['x'] - 1), coordinate['y'], self.map_width)],
+					self.map_data[coordinate_to_series(coordinate['x'], (coordinate['y'] - 1), self.map_width)]]
+			elif coordinate['y'] == (self.map_height - 1):
+				positions_surrounding = [
+					self.map_data[coordinate_to_series((coordinate['x'] - 1), coordinate['y'], self.map_width)],
+					self.map_data[coordinate_to_series((coordinate['x'] + 1), coordinate['y'], self.map_width)],
+					self.map_data[coordinate_to_series(coordinate['x'], (coordinate['y'] - 1), self.map_width)]]
+			elif coordinate['x'] == 0:
+				positions_surrounding = [
+					self.map_data[coordinate_to_series((coordinate['x'] + 1), coordinate['y'], self.map_width)],
+					self.map_data[coordinate_to_series(coordinate['x'], (coordinate['y'] - 1), self.map_width)],
+					self.map_data[coordinate_to_series(coordinate['x'], (coordinate['y'] + 1), self.map_width)]]
+			elif coordinate['x'] == (self.map_width - 1):
+				positions_surrounding = [
+					self.map_data[coordinate_to_series((coordinate['x'] - 1), coordinate['y'], self.map_width)],
+					self.map_data[coordinate_to_series(coordinate['x'], (coordinate['y'] - 1), self.map_width)],
+					self.map_data[coordinate_to_series(coordinate['x'], (coordinate['y'] + 1), self.map_width)]]
+			else:
+				positions_surrounding = [
+					self.map_data[coordinate_to_series((coordinate['x'] - 1), coordinate['y'], self.map_width)],
+					self.map_data[coordinate_to_series((coordinate['x'] + 1), coordinate['y'], self.map_width)],
+					self.map_data[coordinate_to_series(coordinate['x'], (coordinate['y'] - 1), self.map_width)],
+					self.map_data[coordinate_to_series(coordinate['x'], (coordinate['y'] + 1), self.map_width)]]
+			for position in positions_surrounding:
+				if position['piece'] != '   ':
+					total_walls += 1
+
+			if total_walls == len(positions_surrounding):
+				coordinate['piece'] = random.choice((" % ", " # ", " $ "))
+				coordinate['entity_id'] = 'Wall'
+
+				
+					'''
