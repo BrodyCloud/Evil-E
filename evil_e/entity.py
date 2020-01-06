@@ -26,6 +26,7 @@ class CreateEntity:
 			drop_item = self.selected_item
 			drop_item.location = self.location
 			game_map.update(drop_item.location, entity=drop_item)
+			# TODO Just remove this string return so it only ever returns health or a reference to something like it
 			return f"You killed {self.name}, they dropped one of their items."
 		else:
 			return self.health
