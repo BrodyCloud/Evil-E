@@ -1,8 +1,7 @@
 import random
 
-from math import ceil
-from evil_e.displays import display_generics, display_action
-from evil_e.utils import get_key
+from evil_e.displays import display_generics, display_action, player_win
+from evil_e.utils import get_key, output_handler
 from evil_e.entity import CreatePlayer, CreateFriendly, CreateEnemy
 from evil_e.map import CreateMap
 from evil_e.items import CreateHealthItem, CreateAttackItem
@@ -13,7 +12,6 @@ MAP_SIZE_Y = 40
 AIR_SPACES = [15, 14, 12, 10, 8]
 friends = []
 enemies = []
-action = None
 
 player_name = input("Character's Name: ")
 
@@ -62,7 +60,6 @@ for count in range(enemy_count):
 	working_identity = CreateEnemy(enemy_health, working_name)
 	working_identity.location = random.choice(game_map.empty_spaces())
 	game_map.update(working_identity.location, entity=working_identity)
-	# working_identity.add_items(random_item=True)
 	working_identity.add_items(requested_item="bow", item_type='attack')
 	working_identity.selected_item = working_identity.inventory[0]
 	enemies.append(working_identity)
@@ -88,7 +85,7 @@ def game_loop():
 			enemy_action = False
 		while True:
 			action = get_key().decode()
-			if action == ("b" or "B"):
+			if action == ("x" or "X"):
 				exit()
 			elif action == ('p' or "P"):
 				break
@@ -107,13 +104,13 @@ def game_loop():
 					break
 			elif action == ("e" or "E"):
 				if isinstance(main.selected_item, CreateHealthItem):
-					main_action = "Healed: " + str(main.selected_item.heal)
+					main_action = {
+						'hit': False, 'heal': True, 'entity': main, 'amount': str(main.selected_item.heal)}
 					main.modify_health(main.selected_item.heal, game_map)
 					item_to_remove = main.selected_item
 					main.change_selected_item(-1)
 					main.remove_item(item_to_remove)
 					break
-					display_generics(main, game_map)
 			# TODO move entity kill to a single function
 			elif action == ("i" or "I"):
 				main_action = main.attack(game_map, {'x': 0, 'y': -1})
@@ -156,8 +153,12 @@ def game_loop():
 				main.change_selected_item(-1)
 				display_generics(main, game_map)
 			else:
-				print("Invalid Action")
+				display_generics(main, game_map)
+				print(output_handler("Invalid Action", MAP_SIZE_X, 'center'))
+				print(action)
 		# Loop for all enemies and friends, to roam, enemies attack if player is targeted.
+		if len(enemies) <= 0:
+			player_win(main)
 		for enemy in enemies:
 			# Bit of an optimization. Enemy will only search for player if player is within 4 coordinates from them.
 			if (abs(main.location['x'] - enemy.location['x']) <= 4) and \
@@ -165,7 +166,6 @@ def game_loop():
 				enemy_action = enemy.search_area(game_map)
 			else:
 				enemy.do_roam(game_map, 3)
-
 		for friend in friends:
 			friend.do_roam(game_map, 10)
 

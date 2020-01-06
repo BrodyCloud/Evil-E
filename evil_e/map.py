@@ -23,10 +23,10 @@ class CreateMap:
 		self.map_height = height
 		self.map_width = width
 		self.map_data = [[{} for y in range(self.map_height)] for x in range(self.map_width)]
-		self.map_icons = (["   "] * air_count) + [" % ", " # ", " $ "]
+		# The "" counts as a wall, but it can be anything else instead. Multiplier increases wall count over air count.
+		self.map_icons = (["   "] * air_count) + ([""] * 3)
 		self.generate()
 
-	# TODO Just generate walls with random colors? Essentially eliminate the need for % $ #
 	def generate(self):
 		for y in range(self.map_height):
 			for x in range(self.map_width):
@@ -35,18 +35,10 @@ class CreateMap:
 				if working_cords['icon'] == '   ':
 					working_cords["entity"] = "Air"
 					working_cords['icon_color'] = COLOR_BLANK
-				elif working_cords['icon'] == ' # ':
+				elif working_cords['icon'] != '   ':
 					working_cords['icon'] = '   '
 					working_cords['entity'] = "Wall"
-					working_cords['icon_color'] = COLOR_WALL_ONE
-				elif working_cords['icon'] == ' % ':
-					working_cords['icon'] = '   '
-					working_cords['entity'] = "Wall"
-					working_cords['icon_color'] = COLOR_WALL_TWO
-				elif working_cords['icon'] == ' $ ':
-					working_cords['icon'] = '   '
-					working_cords['entity'] = "Wall"
-					working_cords['icon_color'] = COLOR_WALL_THREE
+					working_cords['icon_color'] = random.choice([COLOR_WALL_ONE, COLOR_WALL_TWO, COLOR_WALL_THREE])
 
 	def display(self):
 		for y in range(self.map_height):

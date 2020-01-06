@@ -1,6 +1,12 @@
 import sys
 import subprocess
 
+COLOR_BLANK = "\033[0;0m"
+COLOR_YELLOW = "\033[1;38;2;255;255;51m"
+COLOR_RED = "\033[1;38;2;255;0;0m"
+COLOR_BLUE = "\033[1;38;2;51;255;255m"
+COLOR_GREEN = "\033[1;38;2;20;255;3m"
+
 if sys.platform[:3] == 'win':
 	import msvcrt
 
@@ -38,9 +44,20 @@ def clear():
 		print("\n" * 120)
 
 
-# TODO Maybe move to displays
-def player_death(attacker, player):
-	clear()
-	print("Death Message ;(")
-	print(f"{attacker.name} Killed Player {player.name}")
-	exit()
+# TODO FINISH OUT RIGHT DISPLAY
+def output_handler(input_string, map_width, position='left'):
+	if position == 'left':
+		return input_string
+	elif position == 'center':
+		input_size = len(input_string)
+		color_size = 0
+		colors = [COLOR_BLANK, COLOR_YELLOW, COLOR_BLUE, COLOR_RED, COLOR_GREEN]
+		for color in colors:
+			if input_string.count(color) > 0:
+				color_size += input_string.count(color) * len(color)
+		centered_output = ((' ' * round(((map_width * 3) - (input_size - color_size)) / 2)) + input_string)
+		return centered_output
+	elif position == 'right':
+		pass
+	else:
+		raise ValueError('Invalid position argument. Only left, center, right permitted.')

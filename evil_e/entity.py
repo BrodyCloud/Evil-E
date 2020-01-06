@@ -1,6 +1,6 @@
 import random
 
-from .utils import player_death
+from .displays import player_death
 from .items import CreateAttackItem, CreateHealthItem
 
 

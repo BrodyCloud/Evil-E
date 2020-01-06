@@ -1,10 +1,9 @@
 import random
 
-
 # Range Weapons
-bow = {"name": "Bow", "range": 2, "damage": 10, "accuracy": 50}
+bow = {"name": "Bow", "range": 2, "damage": 10, "accuracy": 40}
 throwing_rock = {"name": "Throwing Rock", "range": 2, "damage": 25, "accuracy": 20}
-throwing_knife = {"name": "Throwing Knife", "range": 2, "damage": 15, "accuracy": 40}
+throwing_knife = {"name": "Throwing Knife", "range": 2, "damage": 15, "accuracy": 30}
 
 # Melee Weapons
 sword = {"name": "Sword", "range": 1, "damage": 15, "accuracy": 80}
@@ -20,8 +19,9 @@ health_large = {"name": "Health Pot Large", "heal": 50}
 
 heal_items = {'health_small': health_small, 'health_large': health_large}
 
-attack_items = {"bow": bow, "throwing_rock": throwing_rock, "throwing_knife": throwing_knife,
-                "sword": sword, "bat": bat, "whip": whip, "spear": spear, "hands": hands, "one_shot": one_shot}
+attack_items = {
+	"bow": bow, "throwing_rock": throwing_rock, "throwing_knife": throwing_knife,
+	"sword": sword, "bat": bat, "whip": whip, "spear": spear, "hands": hands, "one_shot": one_shot}
 
 
 class CreateHealthItem:
