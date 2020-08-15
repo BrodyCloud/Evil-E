@@ -1,6 +1,7 @@
 import random
+import os
 
-from evil_e.displays import display_generics, display_action, player_win
+from evil_e.displays import display_generics, display_action, player_win, player_death
 from evil_e.utils import get_key, output_handler
 from evil_e.entities.player import Player
 from evil_e.entities.enemy import Enemy
@@ -8,10 +9,9 @@ from evil_e.entities.friendly import Friendly
 from evil_e.map import Map
 from evil_e.items import HealthItem, AttackItem
 
-# TODO To be changed to a dynamic size based on terminal width and height
-# 90 x 42
-MAP_SIZE_X = 70
-MAP_SIZE_Y = 40
+terminal_window = os.get_terminal_size()
+MAP_SIZE_X = round(0.325 * terminal_window.columns)
+MAP_SIZE_Y = round(0.75 * terminal_window.lines)
 # Air spaces is the rough amount of empty blocks in a map determined by difficulty
 AIR_SPACES = [15, 14, 12, 10, 8]
 friends = []
@@ -73,7 +73,9 @@ for count in range(world_items):  # Build random items in map
 
 def check_kill(action):
 	if 'kill' in action:
-		if isinstance(action['target_entity'], Enemy):
+		if isinstance(action['target_entity'], Player):
+			player_death(action['entity'], main)
+		elif isinstance(action['target_entity'], Enemy):
 			enemies.remove(action['target_entity'])
 		elif isinstance(action['target_entity'], Friendly):
 			friends.remove(action['target_entity'])
@@ -153,6 +155,7 @@ def game_loop():
 					abs(main.location['y'] - enemy.location['y']) <= 4):
 				enemy_action = enemy.search_area(game_map, main)
 				if enemy_action is not None:
+					check_kill(enemy_action)
 					enemy_actions.append(enemy_action)
 			else:
 				enemy.roam(game_map, 3)

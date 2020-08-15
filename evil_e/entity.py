@@ -1,6 +1,5 @@
 import random
 
-from .displays import player_death
 from .items import AttackItem, HealthItem
 
 
@@ -121,6 +120,7 @@ class Entity:
                 break
         return {"blocked": blocked, "sight": sight, 'entity': entity}
 
+
 class EntityTrade:
     pass
 
@@ -137,16 +137,11 @@ class EntityCombat:
             target_entity = checker['entity']
             if self.entity.selected_item.accuracy >= random.randint(1, 100):
                 if self.entity.selected_item.damage >= target_entity.health:
-                    if isinstance(target_entity, Player):
-                        player_death(self.entity, target_entity)
-                    else:
-                        target_entity.modify_health(-self.entity.selected_item.damage, game_map)
-                        return {'hit': True, 'kill': True, 'entity': self.entity, 'target_entity': target_entity}
+                    target_entity.modify_health(-self.entity.selected_item.damage, game_map)
+                    return {'hit': True, 'kill': True, 'entity': self.entity, 'target_entity': target_entity}
                 else:
                     target_entity.modify_health(-self.entity.selected_item.damage, game_map)
                     return {'hit': True, 'entity': self.entity, 'target_entity': target_entity}
-            else:
-                return {'hit': False, 'entity': self.entity}
         return {'hit': False, 'entity': self.entity}
 
     def defend(self):
