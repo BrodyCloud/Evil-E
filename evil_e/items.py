@@ -24,7 +24,7 @@ attack_items = {
 	"sword": sword, "bat": bat, "whip": whip, "spear": spear, "hands": hands, "one_shot": one_shot}
 
 
-class CreateHealthItem:
+class HealthItem:
 	def __init__(self):
 		self.name = None
 		self.heal = None
@@ -43,7 +43,7 @@ class CreateHealthItem:
 		self.heal = working_item['heal']
 
 
-class CreateAttackItem:
+class AttackItem:
 	def __init__(self):
 		self.name = None
 		self.range = None

@@ -49,8 +49,8 @@ def output_handler(input_string, map_width, position='left'):
 	if position == 'left':
 		return input_string
 	elif position == 'center':
-		input_size = len(input_string)
 		color_size = 0
+		input_size = len(input_string)
 		colors = [COLOR_BLANK, COLOR_YELLOW, COLOR_BLUE, COLOR_RED, COLOR_GREEN]
 		for color in colors:
 			if input_string.count(color) > 0:

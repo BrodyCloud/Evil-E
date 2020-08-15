@@ -1,7 +1,12 @@
 # Evil-E
 
-Terminal, turn based action game. The simple goal, eliminate all E's at all costs.
+Terminal, turn based action game. 
 
+     The goal is simple 
+      Eliminate all Es 
+       At all costs
 
-Work with your friendly F characters to attack, and defeat the all of the E's. Trade, heal, and use different weapons at when
-they're most useful. 
+But you're not alone, the friendly Fs are here to help you fight till the end.
+
+Find, trade, attack, and heal using several items spread throughout the map to reach your
+goal. 

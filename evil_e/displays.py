@@ -8,7 +8,7 @@ COLOR_GREEN = "\033[1;38;2;20;255;3m"
 
 
 def display_generics(main, game_map):
-	"""Map and controls output handler."""
+	"""Map and controls display handler."""
 	clear()
 	game_map.display()
 
@@ -55,15 +55,15 @@ def display_action(action, game_map):
 
 
 def player_death(attacker, player):
-	"""Player death handler, display score, leader board stats, and who killed the player."""
+	"""Player death handler. Displays score, leader board stats, and who killed the player."""
 	clear()
 	print("Death Message ;(")
-	print(f"{attacker.name} Killed Player {player.name}")
+	print(f"{attacker.name} Killed {player.name}")
 	exit()
 
 
 def player_win(player):
-	"""Player win handler, display score, and leader board stats."""
+	"""Player win handler. Displays score, and leader board stats."""
 	clear()
 	print("Player Beat all E's!")
 	print(f"{player.name} scored at least 5!")
