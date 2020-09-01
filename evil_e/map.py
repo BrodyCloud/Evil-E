@@ -51,8 +51,7 @@ class Map:
 				working_cord = self.map_data[x][y]
 				positions = []
 				tally = 0
-				tally_limit = 0
-				if working_cord['entity'] is "Air":
+				if working_cord['entity'] == "Air":
 					if y == 0 and x == 0:
 						tally_limit = 2
 						positions.append({'x': 1, 'y': 0})

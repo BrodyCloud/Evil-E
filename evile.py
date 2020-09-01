@@ -38,7 +38,7 @@ enemy_count = (4 * difficulty)
 world_items = round((.51 * difficulty))
 enemy_health = (50 + (15 * difficulty))
 
-main = Player(100, player_name)  # Build main character
+main = Player(player_name, 100, game_map)  # Build main character
 main.add_items(item_type='attack', requested_item="hands")
 main.add_items(item_type='attack', requested_item="one_shot")
 main.add_items(item_type='health', requested_item="health_large")
@@ -48,7 +48,7 @@ game_map.update(main.location, main)
 
 for count in range(friend_count):  # Build friends
 	working_name = "Friend #" + str(count)
-	working_identity = Friendly(100, working_name)
+	working_identity = Friendly(working_name, 100, game_map)
 	working_identity.location = random.choice(game_map.empty_spaces())
 	game_map.update(working_identity.location, entity=working_identity)
 	working_identity.add_items(random_item=True)
@@ -57,7 +57,7 @@ for count in range(friend_count):  # Build friends
 
 for count in range(enemy_count):  # Build enemies
 	working_name = "Enemy #" + str(count)
-	working_identity = Enemy(enemy_health, working_name)
+	working_identity = Enemy(working_name, enemy_health, game_map)
 	working_identity.location = random.choice(game_map.empty_spaces())
 	game_map.update(working_identity.location, entity=working_identity)
 	working_identity.add_items(requested_item="hands", item_type='attack')
@@ -86,7 +86,6 @@ def check_kill(action):
 def game_loop():
 	main_action = False
 	enemy_actions = []
-	# TODO Convert all of the actions to triggers to consolidate game_loop, improve readability
 	while True:
 		display_generics(main, game_map)
 		if main_action:
@@ -100,20 +99,20 @@ def game_loop():
 			action = get_key().decode()
 			if action in ['x', 'X']:
 				exit()
+			# Speeds actions, DEV MODE ONLY
 			elif action in ['p', 'P']:
-				# Speeds actions, DEV MODE ONLY
 				break
 			elif action in ['w', 'W']:
-				if main.move(game_map, {'x': 0, 'y': -1}):
+				if main.move({'x': 0, 'y': -1}):
 					break
 			elif action in ['a', 'A']:
-				if main.move(game_map, {'x': -1, 'y': 0}):
+				if main.move({'x': -1, 'y': 0}):
 					break
 			elif action in ['s', 'S']:
-				if main.move(game_map, {'x': 0, 'y': 1}):
+				if main.move({'x': 0, 'y': 1}):
 					break
 			elif action in ['d', 'D']:
-				if main.move(game_map, {'x': 1, 'y': 0}):
+				if main.move({'x': 1, 'y': 0}):
 					break
 			elif action in ['e', 'E']:
 				main_action = main.use_consumable()
@@ -123,19 +122,19 @@ def game_loop():
 					break
 			# Attack actions, counts as a single turn regardless of hit or miss.
 			elif action in ['i', 'I']:
-				main_action = main.attack(game_map, {'x': 0, 'y': -1})
+				main_action = main.attack({'x': 0, 'y': -1})
 				check_kill(main_action)
 				break
 			elif action in ['j', 'J']:
-				main_action = main.attack(game_map, {'x': -1, 'y': 0})
+				main_action = main.attack({'x': -1, 'y': 0})
 				check_kill(main_action)
 				break
 			elif action in ['k', 'K']:
-				main_action = main.attack(game_map, {'x': 0, 'y': 1})
+				main_action = main.attack({'x': 0, 'y': 1})
 				check_kill(main_action)
 				break
 			elif action in ['l', 'L']:
-				main_action = main.attack(game_map, {'x': 1, 'y': 0})
+				main_action = main.attack({'x': 1, 'y': 0})
 				check_kill(main_action)
 				break
 			elif action in ['=', '+']:  # Changes selected item, doesn't count as a turn.
@@ -153,14 +152,14 @@ def game_loop():
 			# Optimization. Enemy will only search for player if they are within 4 positions of the player.
 			if (abs(main.location['x'] - enemy.location['x']) <= 4) and (
 					abs(main.location['y'] - enemy.location['y']) <= 4):
-				enemy_action = enemy.search_area(game_map, main)
+				enemy_action = enemy.search_area(main)
 				if enemy_action is not None:
 					check_kill(enemy_action)
 					enemy_actions.append(enemy_action)
 			else:
-				enemy.roam(game_map, 3)
+				enemy.roam(3)
 		for friend in friends:
-			friend.roam(game_map, 10)
+			friend.roam(10)
 
 
 game_loop()

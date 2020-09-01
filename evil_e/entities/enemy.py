@@ -10,8 +10,8 @@ class Enemy(Entity):
     needed or most useful.
     """
 
-    def __init__(self, health, name):
-        super().__init__(health, name)
+    def __init__(self, name, health, game_map):
+        super().__init__(name, health, game_map)
         self.aggression = random.randint(1, 10)
         self.can_trade = False
         self.icon = " E "
@@ -20,7 +20,7 @@ class Enemy(Entity):
         self.has_target = False
         self.target_location = None
 
-    def search_area(self, game_map, player):
+    def search_area(self, player):
         """
         Method for searching, directing enemy towards, and attacking Player Entity. No use of path finding,
         searches for player within it's radius, casts rays if axis is aligned with Player entity. If the path between
@@ -48,77 +48,77 @@ class Enemy(Entity):
         if self.has_target:
             delta_x = self.target_location['x'] - self.location['x']
             delta_y = self.target_location['y'] - self.location['y']
-            if delta_y is 0:
+            if delta_y == 0:
                 if delta_x > 0:
-                    checker = self.sight_cast(game_map, {'x': 1, 'y': 0}, 3)
+                    checker = self.sight_cast({'x': 1, 'y': 0}, 3)
                 else:
-                    checker = self.sight_cast(game_map, {'x': -1, 'y': 0}, 3)
+                    checker = self.sight_cast({'x': -1, 'y': 0}, 3)
                 if checker['blocked']:
-                    return self.roam(game_map, 3)
+                    return self.roam(3)
 
-            elif delta_x is 0:
+            elif delta_x == 0:
                 if delta_y > 0:
-                    checker = self.sight_cast(game_map, {'x': 0, 'y': 1}, 3)
+                    checker = self.sight_cast({'x': 0, 'y': 1}, 3)
                 else:
-                    checker = self.sight_cast(game_map, {'x': 0, 'y': -1}, 3)
+                    checker = self.sight_cast({'x': 0, 'y': -1}, 3)
                 if checker['blocked']:
-                    return self.roam(game_map, 3)
+                    return self.roam(3)
 
             if (abs(delta_x) <= self.selected_item.range) and delta_y == 0:
                 if delta_x <= -1:
-                    return self.attack(game_map, {'x': -1, 'y': 0})
+                    return self.attack({'x': -1, 'y': 0})
                 elif delta_x >= 1:
-                    return self.attack(game_map, {'x': 1, 'y': 0})
+                    return self.attack({'x': 1, 'y': 0})
             elif (abs(delta_y) <= self.selected_item.range) and delta_x == 0:
                 if delta_y <= -1:
-                    return self.attack(game_map, {'x': 0, 'y': -1})
+                    return self.attack({'x': 0, 'y': -1})
                 elif delta_y >= 1:
-                    return self.attack(game_map, {'x': 0, 'y': 1})
+                    return self.attack({'x': 0, 'y': 1})
 
             if delta_y == 0:
                 if delta_x < 0:
-                    self.move(game_map, {'x': -1, 'y': 0})
+                    self.move({'x': -1, 'y': 0})
                 else:
-                    self.move(game_map, {'x': 1, 'y': 0})
+                    self.move({'x': 1, 'y': 0})
             elif delta_x == 0:
                 if delta_y < 0:
-                    self.move(game_map, {'x': 0, 'y': -1})
+                    self.move({'x': 0, 'y': -1})
                 else:
-                    self.move(game_map, {'x': 0, 'y': 1})
+                    self.move({'x': 0, 'y': 1})
             else:
                 if random.choice([delta_x, delta_y]) == delta_y:
                     if delta_y > 0:
-                        checker = self.sight_cast(game_map, {'x': 0, 'y': 1}, 3)
+                        checker = self.sight_cast({'x': 0, 'y': 1}, 3)
                         if checker['blocked']:
-                            self.roam(game_map, 1)
+                            self.roam(1)
                         else:
-                            self.move(game_map, {'x': 0, 'y': 1})
+                            self.move({'x': 0, 'y': 1})
                     else:
-                        checker = self.sight_cast(game_map, {'x': 0, 'y': -1}, 3)
+                        checker = self.sight_cast({'x': 0, 'y': -1}, 3)
                         if checker['blocked']:
-                            self.roam(game_map, 1)
+                            self.roam(1)
                         else:
-                            self.move(game_map, {'x': 0, 'y': -1})
+                            self.move({'x': 0, 'y': -1})
                 else:
                     if delta_x > 0:
-                        checker = self.sight_cast(game_map, {'x': 1, 'y': 0}, 3)
+                        checker = self.sight_cast({'x': 1, 'y': 0}, 3)
                         if checker['blocked']:
-                            self.roam(game_map, 1)
+                            self.roam(1)
                         else:
-                            self.move(game_map, {'x': 1, 'y': 0})
+                            self.move({'x': 1, 'y': 0})
                     else:
-                        checker = self.sight_cast(game_map, {'x': -1, 'y': 0}, 3)
+                        checker = self.sight_cast({'x': -1, 'y': 0}, 3)
                         if checker['blocked']:
-                            self.roam(game_map, 1)
+                            self.roam(1)
                         else:
-                            self.move(game_map, {'x': -1, 'y': 0})
+                            self.move({'x': -1, 'y': 0})
         else:
-            self.roam(game_map, 3)
+            self.roam(3)
 
-    def attack(self, game_map, direction):
-        return self.combat.attack(game_map, direction)
+    def attack(self, direction):
+        return self.combat.attack(direction)
 
-    def roam(self, game_map, move_likelihood):
+    def roam(self, move_likelihood):
         if random.randint(1, move_likelihood) == 1:
             direction = random.choice([{'x': 0, 'y': -1}, {'x': -1, 'y': 0}, {'x': 0, 'y': 1}, {'x': 1, 'y': 0}])
-            self.move(game_map, direction)
+            self.move(direction)

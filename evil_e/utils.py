@@ -8,6 +8,7 @@ COLOR_RED = "\033[1;38;2;255;0;0m"
 COLOR_BLUE = "\033[1;38;2;51;255;255m"
 COLOR_GREEN = "\033[1;38;2;20;255;3m"
 
+# If system is Windows
 if sys.platform[:3] == 'win':
     import msvcrt
 
@@ -16,11 +17,11 @@ if sys.platform[:3] == 'win':
         key = msvcrt.getch()
         return key
 
+# If system is Linux
 elif sys.platform[:3] == 'lin':
     import termios, sys, os
 
     TERMIOS = termios
-
 
     def get_key():
         fd = sys.stdin.fileno()
@@ -39,6 +40,10 @@ elif sys.platform[:3] == 'lin':
 
 
 def clear():
+    """
+    Will clear the terminal if it can determine the base OS method for clearing. If the terminal cannot be cleared,
+    just print 120 blank lines.
+    """
     if os.name in ('nt', 'dos'):
         subprocess.call("cls")
     elif os.name in ('linux', 'osx', 'posix'):
